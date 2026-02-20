@@ -12,3 +12,5 @@
 
 
 To run tests: `npm run test`
+
+Currently deployed and accessible on: https://israel-sage-frontend-assessment.vercel.app
