@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -14,7 +15,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Orbitron'", "system-ui", "sans-serif"],
+        display: ["'Inter'", "system-ui", "sans-serif"],
         body: ["'Inter'", "system-ui", "sans-serif"],
       },
       colors: {
@@ -81,13 +82,34 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.6" },
         },
+        "fade-up": {
+          from: { opacity: "0", transform: "translateY(18px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% center" },
+          "100%": { backgroundPosition: "200% center" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 8px hsl(185 100% 52% / 0.3), 0 0 20px hsl(185 100% 52% / 0.1)" },
+          "50%": { boxShadow: "0 0 20px hsl(185 100% 52% / 0.6), 0 0 40px hsl(185 100% 52% / 0.2)" },
+        },
+        "border-flow": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "fade-up": "fade-up 0.5s ease-out both",
+        "shimmer": "shimmer 3s linear infinite",
+        "glow-pulse": "glow-pulse 2.5s ease-in-out infinite",
+        "border-flow": "border-flow 4s ease infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

@@ -11,34 +11,37 @@ import HomePage from "@/pages/HomePage";
 import CharacterDetailPage from "@/pages/CharacterDetailPage";
 import SearchPage from "@/pages/SearchPage";
 import NotFound from "@/pages/NotFound";
+import { ThemeProvider } from "next-themes";
 
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <FavoritesProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <AppHeader />
-              <main className="flex-1">
-                <Routes>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/character/:id" element={<CharacterDetailPage />} />
-                  <Route path="/search" element={<SearchPage />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
-        </FavoritesProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="starwars-ui-theme">
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <FavoritesProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <AppHeader />
+                <main className="flex-1">
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/character/:id" element={<CharacterDetailPage />} />
+                    <Route path="/search" element={<SearchPage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </SidebarInset>
+            </SidebarProvider>
+          </FavoritesProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ThemeProvider>
 );
 
 export default App;
