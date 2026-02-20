@@ -27,10 +27,12 @@ export function useCharacter(id: string) {
 }
 
 export function useSearchCharacters(query: string) {
+  const normalizedQuery = query.trim();
+
   return useQuery({
-    queryKey: ["search", query],
-    queryFn: () => fetchJSON<SWAPIResponse<SWAPICharacter>>(`${BASE_URL}/people/?search=${encodeURIComponent(query)}`),
-    enabled: query.length >= 2,
+    queryKey: ["search", normalizedQuery],
+    queryFn: () => fetchJSON<SWAPIResponse<SWAPICharacter>>(`${BASE_URL}/people/?search=${encodeURIComponent(normalizedQuery)}`),
+    enabled: normalizedQuery.length > 0,
     staleTime: 1000 * 60 * 5,
   });
 }

@@ -1,21 +1,12 @@
 import { useSearchParams } from "react-router-dom";
 import { useSearchCharacters } from "@/hooks/use-swapi";
-import { useSearchHistory } from "@/hooks/use-search-history";
 import { CharacterCard } from "@/components/CharacterCard";
 import { Loader2, SearchX, Search } from "lucide-react";
-import { useEffect } from "react";
 
 export default function SearchPage() {
   const [searchParams] = useSearchParams();
-  const query = searchParams.get("q") || "";
+  const query = (searchParams.get("q") || "").trim();
   const { data, isLoading, isFetching } = useSearchCharacters(query);
-  const { addToHistory } = useSearchHistory();
-
-  useEffect(() => {
-    if (data && query.length >= 2) {
-      addToHistory(query);
-    }
-  }, [data, query, addToHistory]);
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -34,21 +25,21 @@ export default function SearchPage() {
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
           )}
         </div>
-        {query.length >= 2 && (
+        {query.length > 0 && (
           <p className="text-center text-xs text-muted-foreground font-body mt-1 tracking-wider">
             QUERY: <span className="text-primary/70 font-display">{query.toUpperCase()}</span>
           </p>
         )}
       </div>
 
-      {query.length < 2 && (
+      {query.length === 0 && (
         <div className="flex flex-col items-center py-20 text-muted-foreground">
           <div className="relative mb-4">
             <Search className="h-12 w-12 text-primary/20" />
             <div className="absolute inset-0 h-12 w-12 animate-ping opacity-10 rounded-full bg-primary" />
           </div>
           <p className="font-body text-sm tracking-wider">
-            Type at least <span className="text-primary">2 characters</span> to search.
+            Type at least <span className="text-primary">1 character</span> to search.
           </p>
         </div>
       )}

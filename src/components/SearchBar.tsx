@@ -13,6 +13,15 @@ export function SearchBar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
+    setShowDropdown(true);
+
+    if (value.trim().length === 0 && location.pathname === "/search") {
+      navigate("/", { replace: true });
+    }
+  };
+
   useEffect(() => {
     if (location.pathname === "/search") {
       const params = new URLSearchParams(location.search);
@@ -23,13 +32,16 @@ export function SearchBar() {
 
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    if (query.trim().length >= 2) {
+    const normalizedQuery = query.trim();
+
+    if (normalizedQuery.length > 0) {
       debounceRef.current = setTimeout(() => {
-        navigate(`/search?q=${encodeURIComponent(query.trim())}`, { replace: true });
+        addToHistory(normalizedQuery);
+        navigate(`/search?q=${encodeURIComponent(normalizedQuery)}`, { replace: true });
       }, 400);
     }
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [query, navigate]);
+  }, [query, addToHistory, navigate]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -46,7 +58,7 @@ export function SearchBar() {
   }, []);
 
   const handleSubmit = () => {
-    if (query.trim().length >= 2) {
+    if (query.trim().length > 0) {
       addToHistory(query.trim());
       setShowDropdown(false);
     }
@@ -72,14 +84,14 @@ export function SearchBar() {
           type="text"
           placeholder="Search characters..."
           value={query}
-          onChange={(e) => { setQuery(e.target.value); setShowDropdown(true); }}
+          onChange={(e) => handleQueryChange(e.target.value)}
           onFocus={() => setShowDropdown(true)}
           onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
           className="app-search-input w-full pl-9 pr-8 py-2 text-sm font-body rounded-lg border transition-all duration-300 outline-none placeholder:text-muted-foreground/60 text-foreground"
         />
         {query && (
           <button
-            onClick={() => { setQuery(""); inputRef.current?.focus(); }}
+            onClick={() => { handleQueryChange(""); inputRef.current?.focus(); }}
             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors duration-200"
           >
             <X className="h-3.5 w-3.5" />
